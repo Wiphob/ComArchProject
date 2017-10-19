@@ -10,7 +10,19 @@ public class Simulator {
 
     }
 
-    static void r_type(int opcode, int field1, int field2, int field3) {
+    void r_type(int opcode, int field1, int field2, int field3) {
+        //got field in form of address, use field number to access stored value via mem
+        switch (opcode)
+        {
+            //add mem[field3]=mem[field1]+mem[field2]
+            case 0:
+                mem[field3] = mem[field1]+mem[field2];
+                break;
+            //nand mem[field3]=mem[field1] nand mem[field2]
+            case 1:
+                mem[field3] = ~(mem[field1]&mem[field2]);
+                break;
+        }
 
     }
 
