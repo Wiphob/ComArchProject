@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class Simulator {
     int[] reg = new int[8];
@@ -6,7 +9,7 @@ public class Simulator {
     int pc=0;
 
     public static void main(String[] args) throws IOException {
-
+        print_state();
 
     }
 
@@ -51,10 +54,24 @@ public class Simulator {
 
     static void print_state() {
         Simulator obj = new Simulator();
-        System.out.println("@@@ %n Stage: %n PC"+obj.getPc()+"memory: %n");
-        for (int i=0;i<65536;i++){
-            System.out.println();
-        }
+        for (int i = 0; i < obj.getPc(); i++) {
 
+            System.out.println("@@@ %n Stage: %n PC" + obj.getPc() + "memory: %n");
+
+            for (int i = 0; i < 65536; i++) {
+                System.out.println("mem [ " + i + " ] " + Arrays.toString(obj.getMem()) + "%n");
+                //Stream.of(obj.getMem());
+
+            }
+
+            for (int i = 0; i < 8; i++) {
+                System.out.println("reg [ " + i + " ] " + Arrays.toString(obj.getReg()) + "%n");
+                //Stream.of(obj.getMem());
+
+            }
+
+            System.out.print("end state%n%n");
+
+        }
     }
 }
