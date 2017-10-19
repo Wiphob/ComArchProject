@@ -4,17 +4,28 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class Simulator {
-    int[] reg = new int[8];
-    int[] mem = new int[65536];
-    int pc=0;
+    private static final int REGCAP = 8;
+    private static final int MEMCAP = 5;
 
-    public static void main(String[] args) throws IOException {
-        print_state();
-
+    private int[] reg;
+    private int[] mem;
+    private int pc;
+    public Simulator()
+    {
+        reg = new int[REGCAP];
+        mem = new int[MEMCAP];
+        pc=0;
+        for(int i=0;i<reg.length;i++)
+        {
+            reg[i]=0;
+        }
     }
 
-    void r_type(int opcode, int field1, int field2, int field3) {
+    public void r_type(int opcode, int field1, int field2, int field3) {
         //got field in form of address, use field number to access stored value via mem
+        //print_state before instruction
+        print_state();
+
         switch (opcode)
         {
             //add mem[field3]=mem[field1]+mem[field2]
@@ -26,10 +37,10 @@ public class Simulator {
                 mem[field3] = ~(mem[field1]&mem[field2]);
                 break;
         }
-
+        pc++;
     }
 
-    static void i_type(int opcode, int field1, int field2, int field3) {
+    public void i_type(int opcode, int field1, int field2, int field3) {
         //  reg[B]=memory[reg[A]+offsetfield]
         //  memory[reg[A]+offsetfield]=reg[B]
         //  pc=pc+offsetfield+1
@@ -47,43 +58,38 @@ public class Simulator {
 
     }
 
-    static void j_type(int opcode, int field1, int field2) {
+    public void j_type(int opcode, int field1, int field2) {
 
     }
 
-    static void o_type(int opcode) {
+    public void o_type(int opcode) {
 
     }
-    public int getPc(){
-        return pc;
-    }
-    public int[] getMem(){
-        return mem;
-    }
-    public int[] getReg(){
-        return reg;
-    }
 
-    static void print_state() {
+    public void print_state() {
         Simulator obj = new Simulator();
-        for (int i = 0; i < obj.getPc(); i++) {
+        System.out.println("@@@ \nState:\n\tPC  " + pc + "\n\tmemory:");
 
-            System.out.println("@@@ %n Stage: %n PC" + obj.getPc() + "memory: %n");
-
-            for (int j = 0; j < 65536; j++) {
-                System.out.println("mem [ " + i + " ] " + Arrays.toString(obj.getMem()) + "%n");
-                //Stream.of(obj.getMem());
-
-            }
-
-            for (int j = 0; j < 8; j++) {
-                System.out.println("reg [ " + i + " ] " + Arrays.toString(obj.getReg()) + "%n");
-                //Stream.of(obj.getMem());
-
-            }
-
-            System.out.print("end state%n%n");
+        for (int j = 0; j < mem.length; j++) {
+            System.out.println("\t\tmem [ " + j + " ] " + mem[j]);
+            //Stream.of(obj.getMem());
 
         }
+
+        System.out.println("\tregisters:");
+        for (int j = 0; j < reg.length; j++) {
+            System.out.println("\t\treg [ " + j + " ] " + reg[j]);
+            //Stream.of(obj.getMem());
+
+        }
+
+        System.out.println("end state\n");
+    }
+
+    public void testCase()
+    {
+        mem[0]=0;
+        mem[1]=5;
+        mem[2]=31;
     }
 }
