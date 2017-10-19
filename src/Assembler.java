@@ -32,27 +32,27 @@ public class Assembler {
         int lineOut = 0;
 
         for (int i = 0; i < lines.size(); i++) {
-
+            System.out.println(lines.get(i));
+            String[] substr = lines.get(i).split("\\s");
+            ArrayList<String> str = new ArrayList<String>();
+            for (int j = 1; j < substr.length; j++) {
+                if(substr[j].length() != 0) str.add(substr[j]);
+            }
             if (lines.get(i).matches("(.*)(\\s)lw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)sw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)beq(\\s)(.*)")) {
-                String[] substr = lines.get(i).split("\\s", 6);
-                lineOut = i_type(substr[1], substr[2], substr[3], substr[4], i);
+                lineOut = i_type(str.get(0), str.get(1), str.get(2), str.get(3), i);
 
             } else if (lines.get(i).matches("(.*)(\\s)add(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)nand(\\s)(.*)")) {
-                String[] substr = lines.get(i).split("\\s", 6);
-                lineOut = r_type(substr[1], substr[2], substr[3], substr[4]);
+                lineOut = r_type(str.get(0), str.get(1), str.get(2), str.get(3));
 
             } else if (lines.get(i).matches("(.*)(\\s)jalr(\\s)(.*)")) {
-                String[] substr = lines.get(i).split("\\s", 5);
-                lineOut = j_type(substr[1], substr[2], substr[3]);
+                lineOut = j_type(str.get(0), str.get(1), str.get(2));
 
             } else if (lines.get(i).matches("(.*)(\\s)halt(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)noop(\\s||\\n)(.*)")) {
-                String[] substr = lines.get(i).split("\\s", 3);
-                lineOut = o_type(substr[1]);
+                lineOut = o_type(str.get(0));
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
-                String[] substr = lines.get(i).split("\\s", 4);
                 if (!substr[2].matches("(.*)[a-z](.*)")){
-                    lineOut = Integer.valueOf(substr[2]);
+//                    lineOut = Integer.valueOf(substr[2]);
 
                 } else {
                     for (int j = 0; j < labels.size(); j++) {
@@ -129,6 +129,8 @@ public class Assembler {
 
         if (field3int < 0) field3int = (int) Math.pow(2,16)+field3int;
 
+        System.out.println(code + "  " + field1int + "  " + field2int + "  " + field3int);
+
         return code*(int) Math.pow(2,22)+field1int* (int) Math.pow(2,19)+field2int* (int) Math.pow(2,16)+field3int;
     }
 
@@ -148,5 +150,6 @@ public class Assembler {
 
     }
 }
+
 
 
