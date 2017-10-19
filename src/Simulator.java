@@ -39,8 +39,22 @@ public class Simulator {
     static void o_type(int opcode) {
 
     }
+    public int getPc(){
+        return pc;
+    }
+    public int[] getMem(){
+        return mem;
+    }
+    public int[] getReg(){
+        return reg;
+    }
 
     static void print_state() {
+        Simulator obj = new Simulator();
+        System.out.println("@@@ %n Stage: %n PC"+obj.getPc()+"memory: %n");
+        for (int i=0;i<65536;i++){
+            System.out.println();
+        }
 
     }
 }
