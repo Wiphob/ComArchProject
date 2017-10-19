@@ -58,13 +58,13 @@ public class Simulator {
 
             System.out.println("@@@ %n Stage: %n PC" + obj.getPc() + "memory: %n");
 
-            for (int i = 0; i < 65536; i++) {
+            for (int j = 0; j < 65536; j++) {
                 System.out.println("mem [ " + i + " ] " + Arrays.toString(obj.getMem()) + "%n");
                 //Stream.of(obj.getMem());
 
             }
 
-            for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
                 System.out.println("reg [ " + i + " ] " + Arrays.toString(obj.getReg()) + "%n");
                 //Stream.of(obj.getMem());
 
