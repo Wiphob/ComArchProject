@@ -9,21 +9,33 @@ public class Assembler {
         BufferedReader inFile = new BufferedReader(new FileReader("1.txt"));
         String line;
         BufferedWriter outFile = new BufferedWriter(new FileWriter("2.txt"));
-        while ((line = inFile.readLine()) != null){
 
+        while ((line = inFile.readLine()) != null){
             lines.add(line);
         }
+
         //Label List
         for (int i = 0; i < lines.size(); i++) {
+            String[] substr = lines.get(i).split("\\s");
+            ArrayList<String> str = new ArrayList<>();
+            str.add(substr[0]);
 
-            String[] substr = lines.get(i).split("\\s", 4);
+            for (int j = 1; j < substr.length; j++) {
+                if(substr[j].length() != 0) str.add(substr[j]);
+            }
 
-            if(substr[0].length()!=0) {
-                String[] label = new String[2];
+            if(str.get(0).length()!=0) {
+                String[] label = new String[3];
 
                 label[0] = substr[0];
-                if(substr[1].equals(".fill"))  label[1] = substr[2];
-                else label[1] = String.valueOf(i);
+                if(str.get(1).equals(".fill")) {
+                    label[1] = str.get(2);
+                    label[2] = "0";
+                }
+                else {
+                    label[1] = String.valueOf(i);
+                    label[2] = "1";
+                }
 
                 labels.add(label);
             }
@@ -32,12 +44,12 @@ public class Assembler {
         int lineOut = 0;
 
         for (int i = 0; i < lines.size(); i++) {
-            System.out.println(lines.get(i));
             String[] substr = lines.get(i).split("\\s");
-            ArrayList<String> str = new ArrayList<String>();
+            ArrayList<String> str = new ArrayList<>();
             for (int j = 1; j < substr.length; j++) {
                 if(substr[j].length() != 0) str.add(substr[j]);
             }
+
             if (lines.get(i).matches("(.*)(\\s)lw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)sw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)beq(\\s)(.*)")) {
                 lineOut = i_type(str.get(0), str.get(1), str.get(2), str.get(3), i);
 
@@ -51,12 +63,11 @@ public class Assembler {
                 lineOut = o_type(str.get(0));
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
-                if (!substr[2].matches("(.*)[a-z](.*)")){
-//                    lineOut = Integer.valueOf(substr[2]);
-
+                if (!str.get(1).matches("(.*)[a-z](.*)")){
+                    lineOut = Integer.valueOf(str.get(1));
                 } else {
                     for (int j = 0; j < labels.size(); j++) {
-                        if(labels.get(j)[0].equals(substr[2])) lineOut = Integer.valueOf(labels.get(j)[1]);
+                        if(labels.get(j)[0].equals(str.get(1))) lineOut = Integer.valueOf(labels.get(j)[1]);
                     }
                 }
             }
@@ -100,17 +111,22 @@ public class Assembler {
     }
 
     static int i_type(String opcode, String field1, String field2, String field3,int i) {
+        boolean isAddr=false;
         int code=0;
         int field1int = Integer.parseInt(field1);
         int field2int = Integer.parseInt(field2);
         while (field3.matches("(.*)[a-z](.*)")){
             for (int j = 0; j < labels.size(); j++) {
                 if(field3.equals(labels.get(j)[0])){
-                    field3 = Integer.toString(Integer.valueOf(labels.get(j)[1])-i-1);
+                    field3 = labels.get(j)[1];
+                    if(labels.get(j)[2].equals("1")) isAddr = true;
+                    else isAddr = false;
                 }
             }
         }
+
         int field3int = Integer.parseInt(field3);
+        if (isAddr) field3int -= i+1;
 
         //opcode is lw
         if(opcode.equals("lw")){
@@ -128,8 +144,6 @@ public class Assembler {
         }
 
         if (field3int < 0) field3int = (int) Math.pow(2,16)+field3int;
-
-        System.out.println(code + "  " + field1int + "  " + field2int + "  " + field3int);
 
         return code*(int) Math.pow(2,22)+field1int* (int) Math.pow(2,19)+field2int* (int) Math.pow(2,16)+field3int;
     }
