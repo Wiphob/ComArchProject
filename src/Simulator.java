@@ -10,6 +10,7 @@ public class Simulator {
     private int[] reg;
     private int[] mem;
     private int pc;
+    //private int countExecute = 0;
     public Simulator()
     {
         reg = new int[REGCAP];
@@ -86,10 +87,11 @@ public class Simulator {
         System.out.println("end state\n");
 
         if (Assembler.isHalt==true){
-            int sumMemAndReg = REGCAP + MEMCAP;
-            System.out.println("machine halted\ntotal of "+ (sumMemAndReg) +" instructions executed\nfinal state of machine:\n");
-
+            System.out.println("machine halted\ntotal of "+ (Assembler.countExecute) +" instructions executed\nfinal state of machine:\n");
+            //countExecute = 0;
+            //Assembler.isHalt=false;
         }
+
     }
 
     public void testCase()

@@ -3,7 +3,8 @@ import java.util.ArrayList;
 
 public class Assembler {
     static ArrayList<String[]>  labels = new ArrayList<>();
-    static boolean isHalt=false;
+    static boolean isHalt = true;
+    static int countExecute = 0;
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
@@ -53,15 +54,19 @@ public class Assembler {
 
             if (lines.get(i).matches("(.*)(\\s)lw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)sw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)beq(\\s)(.*)")) {
                 lineOut = i_type(str.get(0), str.get(1), str.get(2), str.get(3), i);
+                countExecute++;
 
             } else if (lines.get(i).matches("(.*)(\\s)add(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)nand(\\s)(.*)")) {
                 lineOut = r_type(str.get(0), str.get(1), str.get(2), str.get(3));
+                countExecute++;
 
             } else if (lines.get(i).matches("(.*)(\\s)jalr(\\s)(.*)")) {
                 lineOut = j_type(str.get(0), str.get(1), str.get(2));
+                countExecute++;
 
             } else if (lines.get(i).matches("(.*)(\\s)halt(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)noop(\\s||\\n)(.*)")) {
                 lineOut = o_type(str.get(0));
+                countExecute++;
                 isHalt=true;
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
@@ -72,6 +77,7 @@ public class Assembler {
                         if(labels.get(j)[0].equals(str.get(1))) lineOut = Integer.valueOf(labels.get(j)[1]);
                     }
                 }
+                countExecute++;
             }
             outFile.write(String.valueOf(lineOut));
             outFile.newLine();
