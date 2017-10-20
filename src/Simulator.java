@@ -28,13 +28,13 @@ public class Simulator {
 
         switch (opcode)
         {
-            //add mem[field3]=mem[field1]+mem[field2]
+            //add reg[field3]=reg[field1]+reg[field2]
             case 0:
-                mem[field3] = mem[field1]+mem[field2];
+                reg[field3] = reg[field1]+reg[field2];
                 break;
-            //nand mem[field3]=mem[field1] nand mem[field2]
+            //nand reg[field3]=reg[field1] nand reg[field2]
             case 1:
-                mem[field3] = ~(mem[field1]&mem[field2]);
+                reg[field3] = ~(reg[field1]&reg[field2]);
                 break;
         }
         pc++;
@@ -88,8 +88,8 @@ public class Simulator {
 
     public void testCase()
     {
-        mem[0]=0;
-        mem[1]=5;
-        mem[2]=31;
+        mem[0]=reg[0]=0;
+        mem[1]=reg[1]=5;
+        mem[2]=reg[2]=31;
     }
 }
