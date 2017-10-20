@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 public class Assembler {
     static ArrayList<String[]>  labels = new ArrayList<>();
+    static boolean isHalt=false;
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
@@ -61,6 +62,7 @@ public class Assembler {
 
             } else if (lines.get(i).matches("(.*)(\\s)halt(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)noop(\\s||\\n)(.*)")) {
                 lineOut = o_type(str.get(0));
+                isHalt=true;
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
                 if (!str.get(1).matches("(.*)[a-z](.*)")){
@@ -75,6 +77,8 @@ public class Assembler {
             outFile.newLine();
         }
         outFile.flush();
+
+
     }
 
     static int r_type(String opcode, String field1, String field2, String field3) {

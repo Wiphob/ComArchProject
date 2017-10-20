@@ -84,6 +84,12 @@ public class Simulator {
         }
 
         System.out.println("end state\n");
+
+        if (Assembler.isHalt==true){
+            int sumMemAndReg = REGCAP + MEMCAP;
+            System.out.println("machine halted\ntotal of "+ (sumMemAndReg) +" instructions executed\nfinal state of machine:\n");
+
+        }
     }
 
     public void testCase()
