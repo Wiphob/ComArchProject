@@ -3,8 +3,6 @@ import java.util.ArrayList;
 
 public class Assembler {
     static ArrayList<String[]>  labels = new ArrayList<>();
-    static boolean isHalt = true;
-    static int countExecute = 0;
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
@@ -27,17 +25,10 @@ public class Assembler {
             }
 
             if(str.get(0).length()!=0) {
-                String[] label = new String[3];
+                String[] label = new String[2];
 
                 label[0] = substr[0];
-                if(str.get(1).equals(".fill")) {
-                    label[1] = str.get(2);
-                    label[2] = "0";
-                }
-                else {
-                    label[1] = String.valueOf(i);
-                    label[2] = "1";
-                }
+                label[1] = String.valueOf(i);
 
                 labels.add(label);
             }
@@ -54,20 +45,15 @@ public class Assembler {
 
             if (lines.get(i).matches("(.*)(\\s)lw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)sw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)beq(\\s)(.*)")) {
                 lineOut = i_type(str.get(0), str.get(1), str.get(2), str.get(3), i);
-                countExecute++;
 
             } else if (lines.get(i).matches("(.*)(\\s)add(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)nand(\\s)(.*)")) {
                 lineOut = r_type(str.get(0), str.get(1), str.get(2), str.get(3));
-                countExecute++;
 
             } else if (lines.get(i).matches("(.*)(\\s)jalr(\\s)(.*)")) {
                 lineOut = j_type(str.get(0), str.get(1), str.get(2));
-                countExecute++;
 
             } else if (lines.get(i).matches("(.*)(\\s)halt(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)noop(\\s||\\n)(.*)")) {
                 lineOut = o_type(str.get(0));
-                countExecute++;
-                isHalt=true;
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
                 if (!str.get(1).matches("(.*)[a-z](.*)")){
@@ -77,7 +63,6 @@ public class Assembler {
                         if(labels.get(j)[0].equals(str.get(1))) lineOut = Integer.valueOf(labels.get(j)[1]);
                     }
                 }
-                countExecute++;
             }
             outFile.write(String.valueOf(lineOut));
             outFile.newLine();
@@ -126,17 +111,15 @@ public class Assembler {
         int field1int = Integer.parseInt(field1);
         int field2int = Integer.parseInt(field2);
         while (field3.matches("(.*)[a-z](.*)")){
+            isAddr=true;
             for (int j = 0; j < labels.size(); j++) {
                 if(field3.equals(labels.get(j)[0])){
                     field3 = labels.get(j)[1];
-                    if(labels.get(j)[2].equals("1")) isAddr = true;
-                    else isAddr = false;
                 }
             }
         }
 
         int field3int = Integer.parseInt(field3);
-        if (isAddr) field3int -= i+1;
 
         //opcode is lw
         if(opcode.equals("lw")){
@@ -151,6 +134,7 @@ public class Assembler {
         //opcode is beq
         if(opcode.equals("beq")){
             code = 4;
+            if (isAddr) field3int -= i+1;
         }
 
         if (field3int < 0) field3int = (int) Math.pow(2,16)+field3int;

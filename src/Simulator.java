@@ -1,47 +1,79 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.ArrayList;
 
 public class Simulator {
-    private static final int REGCAP = 8;
-    private static final int MEMCAP = 5;
+    static int[] reg = new int[8];
+    static int[] mem;
+    static int pc = 0;
+    static boolean isHalt = false;
+    static int instructionCount = 0;
 
-    private int[] reg;
-    private int[] mem;
-    private int pc;
-    //private int countExecute = 0;
-    public Simulator()
-    {
-        reg = new int[REGCAP];
-        mem = new int[MEMCAP];
-        pc=0;
-        for(int i=0;i<reg.length;i++)
-        {
-            reg[i]=0;
+    public static void main(String[] args) throws IOException {
+        ArrayList<String> lines = new ArrayList<>();
+        BufferedReader inFile = new BufferedReader(new FileReader("2.txt"));
+        String line;
+
+        while ((line = inFile.readLine()) != null){
+            lines.add(line);
         }
+
+        mem = new int[lines.size()];
+
+        for (int i = 0; i < lines.size(); i++) {
+            mem[i] = Integer.valueOf(lines.get(i));
+        }
+
+        int opcode;
+        int instruction;
+
+        while (!isHalt) {
+            print_state();
+            instruction = mem[pc];
+            pc++;
+            opcode = (int) (instruction/Math.pow(2,22));
+            System.out.println(instruction);
+
+            if (opcode < 2) {
+                r_type(opcode ,(int) (instruction/Math.pow(2,19))%8 ,(int) (instruction/Math.pow(2,16))%8 ,instruction%8);
+
+            }
+            else if (opcode < 5) {
+                i_type(opcode ,(int) (instruction/Math.pow(2,19))%8 ,(int) (instruction/Math.pow(2,16))%8 ,(instruction%65536));
+
+            }
+            else if (opcode == 5) {
+                j_type(opcode ,(int) (instruction/Math.pow(2,19))%8 ,(int) (instruction/Math.pow(2,16))%8 );
+
+            }
+            else if (opcode < 8) {
+                o_type(opcode);
+            }
+
+            instructionCount++;
+        }
+
+        print_state();
     }
 
-    public void r_type(int opcode, int field1, int field2, int field3) {
+    public static void r_type(int opcode, int field1, int field2, int field3) {
         //got field in form of address, use field number to access stored value via mem
         //print_state before instruction
-        print_state();
 
-        switch (opcode)
-        {
+        switch (opcode) {
             //add reg[field3]=reg[field1]+reg[field2]
             case 0:
-                reg[field3] = reg[field1]+reg[field2];
+                reg[field3] = reg[field1] + reg[field2];
                 break;
             //nand reg[field3]=reg[field1] nand reg[field2]
             case 1:
-                reg[field3] = ~(reg[field1]&reg[field2]);
+                reg[field3] = ~(reg[field1] & reg[field2]);
                 break;
         }
-        pc++;
     }
 
-    public void i_type(int opcode, int field1, int field2, int field3) {
+    public static void i_type(int opcode, int field1, int field2, int field3) {
         //  reg[B]=memory[reg[A]+offsetfield]
         //  memory[reg[A]+offsetfield]=reg[B]
         //  pc=pc+offsetfield+1
@@ -59,45 +91,30 @@ public class Simulator {
 
     }
 
-    public void j_type(int opcode, int field1, int field2) {
+    public static void j_type(int opcode, int field1, int field2) {
 
     }
 
-    public void o_type(int opcode) {
+    public static void o_type(int opcode) {
 
     }
 
-    public void print_state() {
-        Simulator obj = new Simulator();
+    public static void print_state() {
+        if(isHalt) {
+            System.out.println("machine halted\ntotal of "+ instructionCount +" instructions executed\nfinal state of machine:\n");
+        }
+
         System.out.println("@@@ \nState:\n\tPC  " + pc + "\n\tmemory:");
 
         for (int j = 0; j < mem.length; j++) {
             System.out.println("\t\tmem [ " + j + " ] " + mem[j]);
-            //Stream.of(obj.getMem());
-
         }
 
         System.out.println("\tregisters:");
         for (int j = 0; j < reg.length; j++) {
             System.out.println("\t\treg [ " + j + " ] " + reg[j]);
-            //Stream.of(obj.getMem());
-
         }
 
         System.out.println("end state\n");
-
-        if (Assembler.isHalt==true){
-            System.out.println("machine halted\ntotal of "+ (Assembler.countExecute) +" instructions executed\nfinal state of machine:\n");
-            //countExecute = 0;
-            //Assembler.isHalt=false;
-        }
-
-    }
-
-    public void testCase()
-    {
-        mem[0]=reg[0]=0;
-        mem[1]=reg[1]=5;
-        mem[2]=reg[2]=31;
     }
 }
