@@ -74,20 +74,17 @@ public class Simulator {
     }
 
     public static void i_type(int opcode, int field1, int field2, int field3) {
-        //  reg[B]=memory[reg[A]+offsetfield]
+
         //  memory[reg[A]+offsetfield]=reg[B]
         //  pc=pc+offsetfield+1
+      int offsetfield = field3;
 
-    /*  if(offsetfield > 32767){
+      if(offsetfield > 32767){
+          offsetfield = (offsetfield-32768)+(-32768);
+      }
 
-    offsetfield = (offsetfield-32768)+(-32768);
-
-
-
-
-    }
-
-    */
+        //  reg[B]=memory[reg[A]+offsetfield]
+    reg[field2] = mem[reg[field1]+offsetfield];
 
     }
 
