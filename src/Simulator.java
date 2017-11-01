@@ -92,7 +92,8 @@ public class Simulator {
     }
 
     public static void j_type(int opcode, int field1, int field2) {
-
+        reg[field2] = pc;
+        pc = reg[field1];
     }
 
     public static void o_type(int opcode) {
