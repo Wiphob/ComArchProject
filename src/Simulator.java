@@ -75,7 +75,7 @@ public class Simulator {
 
     public static void i_type(int opcode, int field1, int field2, int field3) {
 
-        //  memory[reg[A]+offsetfield]=reg[B]
+
         //  pc=pc+offsetfield+1
       int offsetfield = field3;
 
@@ -85,6 +85,12 @@ public class Simulator {
 
         //  reg[B]=memory[reg[A]+offsetfield]
     reg[field2] = mem[reg[field1]+offsetfield];
+
+        //  memory[reg[A]+offsetfield]=reg[B]
+    mem[reg[field1]+offsetfield] = reg[field2];
+        
+
+
 
     }
 
