@@ -92,9 +92,10 @@ public class Simulator {
             mem[reg[field1] + field3] = reg[field2];
         }
 
-        //  pc=pc+offsetfield+1
-        pc = pc + field3;
-
+        if(opcode == 4) {             //opcode = 4 do beq
+            //  pc=pc+offsetfield
+            pc = pc + field3 ;
+        }
 
     }
 
