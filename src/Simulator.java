@@ -102,8 +102,7 @@ public class Simulator {
 
     public static void o_type(int opcode) {
         if(opcode == 6){
-            //add pc and tell simulator that it have Halt stage
-            pc++;
+            //add pc++ and tell simulator that it have Halt stage
             isHalt=true;
         }
         if (opcode == 7){
