@@ -33,7 +33,6 @@ public class Simulator {
             instruction = mem[pc];
             pc++;
             opcode = (int) (instruction/Math.pow(2,22));
-            System.out.println(instruction);
 
             if (opcode < 2) {
                 r_type(opcode ,(int) (instruction/Math.pow(2,19))%8 ,(int) (instruction/Math.pow(2,16))%8 ,instruction%8);
