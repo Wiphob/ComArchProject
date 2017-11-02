@@ -77,20 +77,23 @@ public class Simulator {
 
 
 
-      //int offsetfield = field3;
+        //int offsetfield = field3;
 
-      if(field3 > 32767){
-          field3 = (field3-32768)+(-32768);
-      }
+        if(field3 > 32767){
+            field3 = (field3-32768)+(-32768);
+        }
+        if(opcode == 2) {             //opcode = 2 do LW
+            //  reg[B]=memory[reg[A]+offsetfield]
+            reg[field2] = mem[reg[field1] + field3];
+        }
 
-        //  reg[B]=memory[reg[A]+offsetfield]
-    reg[field2] = mem[reg[field1]+field3];
-
-        //  memory[reg[A]+offsetfield]=reg[B]
-    mem[reg[field1]+field3] = reg[field2];
+        if(opcode == 3) {             //opcode = 3 do SW
+            //  memory[reg[A]+offsetfield]=reg[B]
+            mem[reg[field1] + field3] = reg[field2];
+        }
 
         //  pc=pc+offsetfield+1
-    pc = pc + field3;
+        pc = pc + field3;
 
 
     }
