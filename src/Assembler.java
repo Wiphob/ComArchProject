@@ -6,9 +6,9 @@ public class Assembler {
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
-        BufferedReader inFile = new BufferedReader(new FileReader("1.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("test1.txt"));
         String line;
-        BufferedWriter outFile = new BufferedWriter(new FileWriter("2.txt"));
+        BufferedWriter outFile = new BufferedWriter(new FileWriter("test2.txt"));
 
         while ((line = inFile.readLine()) != null){
             lines.add(line);
@@ -52,7 +52,7 @@ public class Assembler {
             } else if (lines.get(i).matches("(.*)(\\s)jalr(\\s)(.*)")) {
                 lineOut = j_type(str.get(0), str.get(1), str.get(2));
 
-            } else if (lines.get(i).matches("(.*)(\\s)halt(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)noop(\\s||\\n)(.*)")) {
+            } else if (lines.get(i).matches("(.*)(\\s)halt(\\s||\\n)(.*)") || lines.get(i).matches("(.*)(\\s)noop(\\s||\\n)(.*)")) {
                 lineOut = o_type(str.get(0));
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
