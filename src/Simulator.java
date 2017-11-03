@@ -74,27 +74,28 @@ public class Simulator {
 
     public static void i_type(int opcode, int field1, int field2, int field3) {
 
-
-
-        //int offsetfield = field3;
-
+        // calculate offsetfield for negative value
         if(field3 > 32767){
             field3 = (field3-32768)+(-32768);
         }
+
         if(opcode == 2) {             //opcode = 2 do LW
-            //  reg[B]=memory[reg[A]+offsetfield]
+            // load reg[B] from memory
+            // reg[B]=memory[reg[A]+offsetfield]
             reg[field2] = mem[reg[field1] + field3];
         }
 
         if(opcode == 3) {             //opcode = 3 do SW
-            //  memory[reg[A]+offsetfield]=reg[B]
+            // store reg[B] in memory
+            // memory[reg[A]+offsetfield]=reg[B]
             mem[reg[field1] + field3] = reg[field2];
         }
 
         if(opcode == 4) {             //opcode = 4 do beq
-            if(reg[field1] == reg[field2]){ // if reg[A] = reg[B] do jump
+            if(reg[field1] == reg[field2]){
 
-                //  pc=pc+offsetfield
+                // if reg[A] = reg[B] do jump
+                //  pc = pc + offsetfield
                 pc = pc + field3 ;
 
             }
