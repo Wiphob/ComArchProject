@@ -12,7 +12,7 @@ public class Simulator {
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
-        BufferedReader inFile = new BufferedReader(new FileReader("2.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("test2.txt"));
         String line;
 
         while ((line = inFile.readLine()) != null){
