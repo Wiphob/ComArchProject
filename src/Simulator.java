@@ -92,8 +92,13 @@ public class Simulator {
         }
 
         if(opcode == 4) {             //opcode = 4 do beq
-            //  pc=pc+offsetfield
-            pc = pc + field3 ;
+            if(reg[field1] == reg[field2]){ // if reg[A] = reg[B] do jump
+
+                //  pc=pc+offsetfield
+                pc = pc + field3 ;
+
+            }
+
         }
 
     }
