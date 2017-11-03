@@ -75,9 +75,11 @@ public class Simulator {
     public static void i_type(int opcode, int field1, int field2, int field3) {
 
         // calculate offsetfield for negative value
+
         if(field3 > 32767){
             field3 = (field3-32768)+(-32768);
         }
+        
 
         if(opcode == 2) {             //opcode = 2 do LW
             // load reg[B] from memory
