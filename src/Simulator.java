@@ -5,21 +5,19 @@ import java.util.ArrayList;
 
 public class Simulator {
     static int[] reg = new int[8];
-    static int[] mem;
+    static int[] mem = new int[65536];
     static int pc = 0;
     static boolean isHalt = false;
     static int instructionCount = 0;
+    static ArrayList<String> lines = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        ArrayList<String> lines = new ArrayList<>();
-        BufferedReader inFile = new BufferedReader(new FileReader("test2.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("Test_MachineCode.txt"));
         String line;
 
         while ((line = inFile.readLine()) != null){
             lines.add(line);
         }
-
-        mem = new int[lines.size()];
 
         for (int i = 0; i < lines.size(); i++) {
             mem[i] = Integer.valueOf(lines.get(i));
@@ -129,7 +127,7 @@ public class Simulator {
 
         System.out.println("@@@ \nState:\n\tPC  " + pc + "\n\tmemory:");
 
-        for (int j = 0; j < mem.length; j++) {
+        for (int j = 0; j < ((reg[5] > lines.size())? reg[5]:lines.size()); j++) {
             System.out.println("\t\tmem [ " + j + " ] " + mem[j]);
         }
 

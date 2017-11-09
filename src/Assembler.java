@@ -1,14 +1,16 @@
 import java.io.*;
 import java.util.ArrayList;
 
+import static java.lang.System.exit;
+
 public class Assembler {
     static ArrayList<String[]>  labels = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
-        BufferedReader inFile = new BufferedReader(new FileReader("test1.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("Combination_Assembly.txt"));
         String line;
-        BufferedWriter outFile = new BufferedWriter(new FileWriter("test2.txt"));
+        BufferedWriter outFile = new BufferedWriter(new FileWriter("Combination_MachineCode.txt"));
 
         while ((line = inFile.readLine()) != null){
             lines.add(line);
@@ -17,14 +19,14 @@ public class Assembler {
         //Label List
         for (int i = 0; i < lines.size(); i++) {
             String[] substr = lines.get(i).split("\\s");
-            ArrayList<String> str = new ArrayList<>();
-            str.add(substr[0]);
 
-            for (int j = 1; j < substr.length; j++) {
-                if(substr[j].length() != 0) str.add(substr[j]);
-            }
-
-            if(str.get(0).length()!=0) {
+            if(substr[0].length()!=0) {
+                for (int j = 0; j < labels.size(); j++) {
+                    if (labels.get(j)[0].equals(substr[0])) {
+                        System.out.println("Define same label: " + substr[0]);
+                        exit(1);
+                    }
+                }
                 String[] label = new String[2];
 
                 label[0] = substr[0];
@@ -63,6 +65,9 @@ public class Assembler {
                         if(labels.get(j)[0].equals(str.get(1))) lineOut = Integer.valueOf(labels.get(j)[1]);
                     }
                 }
+            } else {
+                System.out.println("Don't know this opcode: " + str.get(0));
+                exit(1);
             }
             outFile.write(String.valueOf(lineOut));
             outFile.newLine();
@@ -106,16 +111,22 @@ public class Assembler {
     }
 
     static int i_type(String opcode, String field1, String field2, String field3,int i) {
-        boolean isAddr=false;
+        boolean isAddr = false;
+        boolean isLabelAndDontHas = false;
         int code=0;
         int field1int = Integer.parseInt(field1);
         int field2int = Integer.parseInt(field2);
-        while (field3.matches("(.*)[a-z](.*)")){
-            isAddr=true;
+
+        if (field3.matches("(.*)[a-z](.*)")) {
+            isAddr = true;
             for (int j = 0; j < labels.size(); j++) {
                 if(field3.equals(labels.get(j)[0])){
                     field3 = labels.get(j)[1];
                 }
+            }
+            if (field3.matches("(.*)[a-z](.*)")) {
+                System.out.println("Undefine this label: " + field3);
+                exit(1);
             }
         }
 
@@ -137,7 +148,12 @@ public class Assembler {
             if (isAddr) field3int -= i+1;
         }
 
-        if (field3int < 0) field3int = (int) Math.pow(2,16)+field3int;
+        if ((field3int > 32767) || (field3int < (-32768))) {
+            System.out.println("offetfield used more than 16 bit: " + field3int);
+            exit(1);
+        }
+
+        if (field3int < 0) field3int = (int) 65536+field3int;
 
         return code*(int) Math.pow(2,22)+field1int* (int) Math.pow(2,19)+field2int* (int) Math.pow(2,16)+field3int;
     }

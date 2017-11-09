@@ -11,5 +11,5 @@ loop2	add	3	3	3		//s=s+s
 	beq	2	2	loop		//jump loop
 finish	halt
 pos1	.fill 	1	
-mcand	.fill	1
-mplier	.fill	-1
+mcand	.fill	32766
+mplier	.fill	10383
