@@ -127,7 +127,7 @@ public class Simulator {
 
         System.out.println("@@@ \nState:\n\tPC  " + pc + "\n\tmemory:");
 
-        for (int j = 0; j < ((reg[5] > lines.size())? reg[5]:lines.size()); j++) {
+        for (int j = 0; j < lines.size(); j++) {
             System.out.println("\t\tmem [ " + j + " ] " + mem[j]);
         }
 
