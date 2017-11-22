@@ -8,21 +8,21 @@ public class Assembler {
 
     public static void main(String[] args) throws IOException {
         ArrayList<String> lines = new ArrayList<>();
-        BufferedReader inFile = new BufferedReader(new FileReader("Combination_Assembly.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("Combination_Assembly.txt")); //Assembly file ที่จะทำ
         String line;
-        BufferedWriter outFile = new BufferedWriter(new FileWriter("Combination_MachineCode.txt"));
+        BufferedWriter outFile = new BufferedWriter(new FileWriter("Combination_MachineCode.txt")); //file machinecode ที่จะเอาออก
 
-        while ((line = inFile.readLine()) != null){
+        while ((line = inFile.readLine()) != null){   //รับ code assembly ทีละบรรทัด
             lines.add(line);
         }
 
         //Label List
-        for (int i = 0; i < lines.size(); i++) {
+        for (int i = 0; i < lines.size(); i++) {  //check label ในแต่ละบรรทัด
             String[] substr = lines.get(i).split("\\s");
 
             if(substr[0].length()!=0) {
                 for (int j = 0; j < labels.size(); j++) {
-                    if (labels.get(j)[0].equals(substr[0])) {
+                    if (labels.get(j)[0].equals(substr[0])) {       //check label ซ้ำกัน
                         System.out.println("Define same label: " + substr[0]);
                         exit(1);
                     }
@@ -37,14 +37,14 @@ public class Assembler {
         }
 
         int lineOut = 0;
-
+        //Opcode field
         for (int i = 0; i < lines.size(); i++) {
-            String[] substr = lines.get(i).split("\\s");
+            String[] substr = lines.get(i).split("\\s");   //นำ code บรรทัดนั้นมาแบ่งไว้ใน substr[]
             ArrayList<String> str = new ArrayList<>();
             for (int j = 1; j < substr.length; j++) {
                 if(substr[j].length() != 0) str.add(substr[j]);
             }
-
+            //check opcode type
             if (lines.get(i).matches("(.*)(\\s)lw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)sw(\\s)(.*)") || lines.get(i).matches("(.*)(\\s)beq(\\s)(.*)")) {
                 lineOut = i_type(str.get(0), str.get(1), str.get(2), str.get(3), i);
 
