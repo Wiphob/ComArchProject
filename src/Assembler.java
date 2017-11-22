@@ -37,7 +37,7 @@ public class Assembler {
         }
 
         int lineOut = 0;
-        //Opcode field
+        //Opcode + field
         for (int i = 0; i < lines.size(); i++) {
             String[] substr = lines.get(i).split("\\s");   //นำ code บรรทัดนั้นมาแบ่งไว้ใน substr[]
             ArrayList<String> str = new ArrayList<>();

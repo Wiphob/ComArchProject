@@ -109,7 +109,7 @@ public class Simulator {
             reg[field2] = pc;
             pc = reg[field1];
         }else
-            reg[field1] = pc;
+            reg[field1] = pc;  //same reg -> pc=pc+1
     }
 
     public static void o_type(int opcode) {
