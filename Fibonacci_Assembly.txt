@@ -1,0 +1,35 @@
+main	lw	0	1	n
+	lw	0	6	fibo
+	jalr	6	7
+	halt
+	lw	0	3	pos1
+	beq	1	0	ret0	//if n==0 jump return 0
+	beq	1	3	ret1	//if n==1 jump return 1
+	add	3	5	5	//stack+1
+	sw	5	1	stack	//store n
+	add	3	5	5	//stack+2
+	sw	5	7	stack	//store ra
+	add	3	5	5	//stack+3
+	lw	0	4	neg1
+	add	4	1	1	//n-1
+	jalr	6	7		//fibo(n-1)
+	sw	5	2	stack	//store fibo(n-1) value
+	add	4	1	1	//n-2
+	jalr	6	7		//fibo(n-2)
+	lw	5	3	stack	//load fibo(n-1) value
+	add	4	5	5	//stack-3
+	lw	5	7	stack
+	add	4	5	5
+	lw	5	1	stack
+	add	4	5	5
+	add	3	2	2
+	jalr	7	3
+ret0	add	0	0	2
+	jalr	7	3
+ret1	lw	0	2	pos1
+	jalr	7	3
+neg1	.fill	-1
+pos1	.fill	1
+fibo    .fill   4
+n	.fill	10
+stack	.fill	0

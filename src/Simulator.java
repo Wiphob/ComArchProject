@@ -5,21 +5,19 @@ import java.util.ArrayList;
 
 public class Simulator {
     static int[] reg = new int[8];
-    static int[] mem;
+    static int[] mem = new int[65536];
     static int pc = 0;
     static boolean isHalt = false;
     static int instructionCount = 0;
+    static ArrayList<String> lines = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        ArrayList<String> lines = new ArrayList<>();
-        BufferedReader inFile = new BufferedReader(new FileReader("2.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("Test_MachineCode.txt"));
         String line;
 
         while ((line = inFile.readLine()) != null){
             lines.add(line);
         }
-
-        mem = new int[lines.size()];
 
         for (int i = 0; i < lines.size(); i++) {
             mem[i] = Integer.valueOf(lines.get(i));
@@ -33,7 +31,6 @@ public class Simulator {
             instruction = mem[pc];
             pc++;
             opcode = (int) (instruction/Math.pow(2,22));
-            System.out.println(instruction);
 
             if (opcode < 2) {
                 r_type(opcode ,(int) (instruction/Math.pow(2,19))%8 ,(int) (instruction/Math.pow(2,16))%8 ,instruction%8);
@@ -74,29 +71,55 @@ public class Simulator {
     }
 
     public static void i_type(int opcode, int field1, int field2, int field3) {
-        //  reg[B]=memory[reg[A]+offsetfield]
-        //  memory[reg[A]+offsetfield]=reg[B]
-        //  pc=pc+offsetfield+1
 
-    /*  if(offsetfield > 32767){
+        // calculate offsetfield for negative value
 
-    offsetfield = (offsetfield-32768)+(-32768);
+        if(field3 > 32767){
+            field3 = (field3-32768)+(-32768);
+        }
+        
 
+        if(opcode == 2) {             //opcode = 2 do LW
+            // load reg[B] from memory
+            // reg[B]=memory[reg[A]+offsetfield]
+            reg[field2] = mem[reg[field1] + field3];
+        }
 
+        if(opcode == 3) {             //opcode = 3 do SW
+            // store reg[B] in memory
+            // memory[reg[A]+offsetfield]=reg[B]
+            mem[reg[field1] + field3] = reg[field2];
+        }
 
+        if(opcode == 4) {             //opcode = 4 do beq
+            if(reg[field1] == reg[field2]){
 
-    }
+                // if reg[A] = reg[B] do jump
+                //  pc = pc + offsetfield
+                pc = pc + field3 ;
 
-    */
+            }
+
+        }
 
     }
 
     public static void j_type(int opcode, int field1, int field2) {
-        reg[field2] = pc;
-        pc = reg[field1];
+        if(field1!=field2) {
+            reg[field2] = pc;
+            pc = reg[field1];
+        }else
+            reg[field1] = pc;  //same reg -> pc=pc+1
     }
 
     public static void o_type(int opcode) {
+        if(opcode == 6){
+            //add pc++ and tell simulator that it have Halt stage
+            isHalt=true;
+        }
+        if (opcode == 7){
+            //do not thing
+        }
 
     }
 
@@ -107,7 +130,7 @@ public class Simulator {
 
         System.out.println("@@@ \nState:\n\tPC  " + pc + "\n\tmemory:");
 
-        for (int j = 0; j < mem.length; j++) {
+        for (int j = 0; j < lines.size(); j++) {
             System.out.println("\t\tmem [ " + j + " ] " + mem[j]);
         }
 
