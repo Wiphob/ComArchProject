@@ -12,7 +12,7 @@ public class Simulator {
     static ArrayList<String> lines = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        BufferedReader inFile = new BufferedReader(new FileReader("Test_MachineCode.txt"));
+        BufferedReader inFile = new BufferedReader(new FileReader("Combination_MachineCode.txt"));//โหลดไฟล์
         String line;
 
         while ((line = inFile.readLine()) != null){
@@ -20,18 +20,18 @@ public class Simulator {
         }
 
         for (int i = 0; i < lines.size(); i++) {
-            mem[i] = Integer.valueOf(lines.get(i));
+            mem[i] = Integer.valueOf(lines.get(i));//เอา machine code แต่ละบรรทัดใส่ใน memory
         }
 
         int opcode;
         int instruction;
 
-        while (!isHalt) {
+        while (!isHalt) {// ทำงานจนกว่าจะเจอคำสั่ง halt
             print_state();
             instruction = mem[pc];
             pc++;
             opcode = (int) (instruction/Math.pow(2,22));
-
+            //หาค่า opcode และแยกคำนวณแต่ละ type
             if (opcode < 2) {
                 r_type(opcode ,(int) (instruction/Math.pow(2,19))%8 ,(int) (instruction/Math.pow(2,16))%8 ,instruction%8);
 
@@ -47,7 +47,7 @@ public class Simulator {
             else if (opcode < 8) {
                 o_type(opcode);
             }
-
+            //นับว่าโปรแกรมทำงานกี่ครั้ง
             instructionCount++;
         }
 
@@ -72,7 +72,7 @@ public class Simulator {
 
     public static void i_type(int opcode, int field1, int field2, int field3) {
 
-        // calculate offsetfield for negative value
+        // คำนวณ offsetfield ของค่าลบ
 
         if(field3 > 32767){
             field3 = (field3-32768)+(-32768);

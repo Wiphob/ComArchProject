@@ -18,7 +18,7 @@ public class Assembler {
 
         //Label List
         for (int i = 0; i < lines.size(); i++) {  //check label ในแต่ละบรรทัด
-            String[] substr = lines.get(i).split("\\s"); // แนก string ในบรรทัดออกจากกันด้วย white space
+            String[] substr = lines.get(i).split("\\s"); // แยก string ในบรรทัดออกจากกันด้วย white space
 
             if(substr[0].length()!=0) {
                 for (int j = 0; j < labels.size(); j++) {
