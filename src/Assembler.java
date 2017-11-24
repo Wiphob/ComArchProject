@@ -58,7 +58,7 @@ public class Assembler {
                 lineOut = o_type(str.get(0));
 
             } else if (lines.get(i).matches("(.*)(\\s).fill(\\s)(.*)")){
-                if (!str.get(1).matches("(.*)[a-z](.*)")){//เช็คว่า string ที่ได้มาไม่มี character
+                if (!str.get(1).matches("(.*)[A-Za-z](.*)")){//เช็คว่า string ที่ได้มาไม่มี character
                     lineOut = Integer.valueOf(str.get(1));
                 } else {
                     for (int j = 0; j < labels.size(); j++) {
@@ -116,14 +116,14 @@ public class Assembler {
         int field1int = Integer.parseInt(field1);
         int field2int = Integer.parseInt(field2);
         //เช็คว่า field3 มี character จะได้ไปหาว่าตรงกับ label ไหน
-        if (field3.matches("(.*)[a-z](.*)")) {
+        if (field3.matches("(.*)[A-Za-z](.*)")) {
             isAddr = true;
             for (int j = 0; j < labels.size(); j++) {
                 if(field3.equals(labels.get(j)[0])){ //เช็ค label
                     field3 = labels.get(j)[1];
                 }
             }
-            if (field3.matches("(.*)[a-z](.*)")) { //แจ้ง error ถ้า field3 ไม่ได้เป็น string ที่เป็นตัวเลขบรรทัดคำสั่ง
+            if (field3.matches("(.*)[A-Za-z](.*)")) { //แจ้ง error ถ้า field3 ไม่ได้เป็น string ที่เป็นตัวเลขบรรทัดคำสั่ง
                 System.out.println("Undefine this label: " + field3);
                 exit(1);
             }
